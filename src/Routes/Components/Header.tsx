@@ -14,6 +14,7 @@ const Nav = styled(motion.nav)`
   font-size: 14px;
   padding: 20px 60px;
   color: white;
+  font-family: "GowunDodum-Regular";
 `;
 
 const Col = styled.div`

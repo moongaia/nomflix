@@ -4,7 +4,6 @@ import { useQuery } from "react-query";
 import { useHistory, useRouteMatch } from "react-router-dom";
 import styled from "styled-components";
 import {
-  getLatestMovies,
   getMovies,
   getTopRated,
   getUpcoming,
@@ -15,6 +14,7 @@ import { makeImagePath } from "../utils";
 
 const Wrapper = styled.div`
   background: black;
+  font-family: "GowunDodum-Regular";
 `;
 
 const Loader = styled.div`
@@ -127,6 +127,7 @@ const BigOverview = styled.p`
   padding: 20px;
   position: relative;
   top: -80px;
+  font-size: 20px;
   color: ${(props) => props.theme.white.lighter};
 `;
 
@@ -134,6 +135,16 @@ const Category = styled.div`
   font-size: 20px;
   color: ${(props) => props.theme.white.lighter};
 `;
+
+const NextBtn = styled(motion.div)`
+  position: absolute;
+  right: 11px;
+  top: 110px;
+  font-size: 20px;
+  color: ${(props) => props.theme.white.lighter};
+  cursor: pointer;
+`;
+
 const rowVariants = {
   hidden: {
     x: window.outerWidth + 5, // + 10은 내부의 gap을 수정해주기 위한 것.
@@ -183,11 +194,6 @@ function Home() {
     getMovies
   );
 
-  const { data: latest, isLoading: latestLoading } = useQuery<IMovie[]>(
-    ["movies", "latest"],
-    getLatestMovies
-  );
-
   const { data: top, isLoading: topLoading } = useQuery<IGetMoviesResult>(
     ["movies", "top"],
     getTopRated
@@ -197,10 +203,11 @@ function Home() {
     useQuery<IGetMoviesResult>(["movies", "upcoming"], getUpcoming);
 
   const [index, setIndex] = useState(0);
-  const [latestIndex, setLatestIndex] = useState(0);
   const [topIndex, setTopIndex] = useState(0);
   const [upcomingIndex, setUpcomingIndex] = useState(0);
   const [leaving, setLeaving] = useState(false); // Row간격 버그 수정
+  const toggleLeaving = () => setLeaving((prev) => !prev);
+
   const incraseIndex = () => {
     if (data) {
       if (leaving) return;
@@ -211,42 +218,58 @@ function Home() {
     }
   };
 
-  // const incraseLatestIndex = () => {
-  //   if (latest) {
-  //     if (leaving) return;
-  //     toggleLeaving();
-  //     const totalMovies = latest.results.length - 1;
-  //     const maxIndex = Math.floor(totalMovies / offset) - 1;
-  //     setIndex((prev) => (prev === maxIndex ? 0 : prev + 1));
-  //   }
-  // };
+  const incraseTopIndex = () => {
+    if (top) {
+      if (leaving) return;
+      toggleLeaving();
+      const totalMovies = top.results.length - 1;
+      const maxIndex = Math.floor(totalMovies / offset) - 1;
+      setTopIndex((prev) => (prev === maxIndex ? 0 : prev + 1));
+    }
+  };
 
-  const toggleLeaving = () => setLeaving((prev) => !prev);
+  const incraseUpcomingIndex = () => {
+    if (upcoming) {
+      if (leaving) return;
+      toggleLeaving();
+      const totalMovies = upcoming.results.length - 1;
+      const maxIndex = Math.floor(totalMovies / offset) - 1;
+      setUpcomingIndex((prev) => (prev === maxIndex ? 0 : prev + 1));
+    }
+  };
+
   const onBoxClicked = (movieId: number) => {
     history.push(`/movies/${movieId}`);
   };
   const onOverlayClick = () => history.push("/");
+
   const clickedMovie =
     bigMovieMatch?.params.movieId &&
     data?.results.find((movie) => movie.id === +bigMovieMatch.params.movieId); // +: String to Number
 
+  const clickedTop =
+    bigMovieMatch?.params.movieId &&
+    top?.results.find((movie) => movie.id === +bigMovieMatch.params.movieId);
+
+  const clickedUpcoming =
+    bigMovieMatch?.params.movieId &&
+    upcoming?.results.find(
+      (movie) => movie.id === +bigMovieMatch.params.movieId
+    );
   // console.log(latest);
   return (
     <Wrapper>
-      {isLoading && latestLoading && topLoading ? (
+      {isLoading && topLoading && upcomingLoading ? (
         <Loader>Loading...</Loader>
       ) : (
         <>
-          <Banner
-            onClick={incraseIndex}
-            bgPhoto={makeImagePath(data?.results[0].backdrop_path || "")}
-          >
+          <Banner bgPhoto={makeImagePath(data?.results[0].backdrop_path || "")}>
             <Title>{data?.results[0].title}</Title>
             <Overview>{data?.results[0].overview}</Overview>
           </Banner>
 
           <Slider>
-            <Category>Now Playing</Category>
+            <Category>Latest</Category>
             <AnimatePresence initial={false} onExitComplete={toggleLeaving}>
               <Row
                 variants={rowVariants}
@@ -277,41 +300,10 @@ function Home() {
                   ))}
               </Row>
             </AnimatePresence>
+            <NextBtn onClick={incraseIndex}>
+              <i className="fas fa-chevron-right"></i>
+            </NextBtn>
           </Slider>
-
-          {/* <Slider>
-            <Category>Latest</Category>
-            <AnimatePresence initial={false} onExitComplete={toggleLeaving}>
-              <Row
-                variants={rowVariants}
-                initial="hidden"
-                animate="visible"
-                exit="exit"
-                transition={{ type: "tween", duration: 1 }}
-                key={index}
-              >
-                {latest?
-                  .slice(1)
-                  .slice(offset * latestIndex, offset * latestIndex + offset) // pagination
-                  .map((movie) => (
-                    <Box
-                      layoutId={movie.id + ""}
-                      key={movie.id}
-                      whileHover="hover"
-                      initial="normal"
-                      variants={boxVariants}
-                      onClick={() => onBoxClicked(movie.id)}
-                      transition={{ type: "tween" }}
-                      bgPhoto={makeImagePath(movie.backdrop_path, "w500")}
-                    >
-                      <Info variants={infoVariants}>
-                        <h4>{movie.title}</h4>
-                      </Info>
-                    </Box>
-                  ))}
-              </Row>
-            </AnimatePresence>
-          </Slider> */}
 
           <Slider>
             <Category>Top Rated</Category>
@@ -322,7 +314,7 @@ function Home() {
                 animate="visible"
                 exit="exit"
                 transition={{ type: "tween", duration: 1 }}
-                key={index}
+                key={topIndex}
               >
                 {top?.results
                   .slice(1)
@@ -345,6 +337,9 @@ function Home() {
                   ))}
               </Row>
             </AnimatePresence>
+            <NextBtn onClick={incraseTopIndex}>
+              <i className="fas fa-chevron-right"></i>
+            </NextBtn>
           </Slider>
 
           <Slider>
@@ -356,7 +351,7 @@ function Home() {
                 animate="visible"
                 exit="exit"
                 transition={{ type: "tween", duration: 1 }}
-                key={index}
+                key={upcomingIndex}
               >
                 {upcoming?.results
                   .slice(1)
@@ -382,6 +377,9 @@ function Home() {
                   ))}
               </Row>
             </AnimatePresence>
+            <NextBtn onClick={incraseUpcomingIndex}>
+              <i className="fas fa-chevron-right"></i>
+            </NextBtn>
           </Slider>
 
           <AnimatePresence>
@@ -408,6 +406,46 @@ function Home() {
                       />
                       <BigTitle>{clickedMovie.title}</BigTitle>
                       <BigOverview>{clickedMovie.overview}</BigOverview>
+                      <BigOverview>
+                        Release Date: {clickedMovie.release_date}
+                      </BigOverview>
+                      <BigOverview>{clickedMovie.runtime}</BigOverview>
+                    </>
+                  )}
+                  {clickedTop && (
+                    <>
+                      <BigCover
+                        style={{
+                          backgroundImage: `linear-gradient(to top, black, transparent), url(${makeImagePath(
+                            clickedTop.backdrop_path,
+                            "w500"
+                          )})`,
+                        }}
+                      />
+                      <BigTitle>{clickedTop.title}</BigTitle>
+                      <BigOverview>{clickedTop.overview}</BigOverview>
+                      <BigOverview>
+                        Release Date: {clickedTop.release_date}
+                      </BigOverview>
+                      <BigOverview>{clickedTop.runtime}</BigOverview>
+                    </>
+                  )}
+                  {clickedUpcoming && (
+                    <>
+                      <BigCover
+                        style={{
+                          backgroundImage: `linear-gradient(to top, black, transparent), url(${makeImagePath(
+                            clickedUpcoming.backdrop_path,
+                            "w500"
+                          )})`,
+                        }}
+                      />
+                      <BigTitle>{clickedUpcoming.title}</BigTitle>
+                      <BigOverview>{clickedUpcoming.overview}</BigOverview>
+                      <BigOverview>
+                        Release Date: {clickedUpcoming.release_date}
+                      </BigOverview>
+                      <BigOverview>{clickedUpcoming.runtime}</BigOverview>
                     </>
                   )}
                 </BigMovie>
