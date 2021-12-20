@@ -10,6 +10,7 @@ export interface IMovie {
   popularity: number;
   release_date: string;
   runtime: number;
+  vote_average: number;
 }
 
 interface ITv {

@@ -328,6 +328,34 @@ function Search() {
                       <BigOverview>{clickedMovie.overview}</BigOverview>
                     </>
                   )}
+                  {/* {clickedTv && (
+                    <>
+                      <BigCover
+                        style={{
+                          backgroundImage: `linear-gradient(to top, black, transparent), url(${makeImagePath(
+                            clickedTv.backdrop_path,
+                            "w500"
+                          )})`,
+                        }}
+                      />
+                      <BigTitle>{clickedTv.name}</BigTitle>
+                      <BigOverview>{clickedTv.overview}</BigOverview>
+                    </>
+                  )} */}
+                </BigMovie>
+              </>
+            ) : null}
+            {bigTvMatch ? (
+              <>
+                <Overlay
+                  onClick={onOverlayClick}
+                  exit={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                />
+                <BigMovie
+                  style={{ top: scrollY.get() + 100 }}
+                  layoutId={bigTvMatch.params.tvId}
+                >
                   {clickedTv && (
                     <>
                       <BigCover

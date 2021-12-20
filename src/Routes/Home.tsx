@@ -11,6 +11,7 @@ import {
   IMovie,
 } from "../api";
 import { makeImagePath } from "../utils";
+import noImg from "../images/no_image.png";
 
 const Wrapper = styled.div`
   background: black;
@@ -124,11 +125,19 @@ const BigTitle = styled.h3`
 `;
 
 const BigOverview = styled.p`
-  padding: 20px;
+  padding: 15px;
   position: relative;
-  top: -80px;
+  top: -90px;
   font-size: 20px;
   color: ${(props) => props.theme.white.lighter};
+`;
+
+const BigRating = styled.div`
+  font-size: 15px;
+  color: ${(props) => props.theme.white.lighter};
+  position: relative;
+  top: -90px;
+  padding: 15px;
 `;
 
 const Category = styled.div`
@@ -257,9 +266,11 @@ function Home() {
       (movie) => movie.id === +bigMovieMatch.params.movieId
     );
   // console.log(latest);
+
+  const loading = isLoading || topLoading || upcomingLoading;
   return (
     <Wrapper>
-      {isLoading && topLoading && upcomingLoading ? (
+      {loading ? (
         <Loader>Loading...</Loader>
       ) : (
         <>
@@ -328,7 +339,11 @@ function Home() {
                       variants={boxVariants}
                       onClick={() => onBoxClicked(movie.id)}
                       transition={{ type: "tween" }}
-                      bgPhoto={makeImagePath(movie.backdrop_path, "w500")}
+                      bgPhoto={
+                        movie.backdrop_path
+                          ? makeImagePath(movie.backdrop_path, "w500")
+                          : noImg
+                      }
                     >
                       <Info variants={infoVariants}>
                         <h4>{movie.title}</h4>
@@ -406,10 +421,11 @@ function Home() {
                       />
                       <BigTitle>{clickedMovie.title}</BigTitle>
                       <BigOverview>{clickedMovie.overview}</BigOverview>
-                      <BigOverview>
+                      <BigRating>
                         Release Date: {clickedMovie.release_date}
-                      </BigOverview>
-                      <BigOverview>{clickedMovie.runtime}</BigOverview>
+                      </BigRating>
+                      <BigRating>{clickedMovie.runtime}</BigRating>
+                      <BigRating>Rating: {clickedMovie.vote_average}</BigRating>
                     </>
                   )}
                   {clickedTop && (
@@ -424,10 +440,11 @@ function Home() {
                       />
                       <BigTitle>{clickedTop.title}</BigTitle>
                       <BigOverview>{clickedTop.overview}</BigOverview>
-                      <BigOverview>
+                      <BigRating>
                         Release Date: {clickedTop.release_date}
-                      </BigOverview>
-                      <BigOverview>{clickedTop.runtime}</BigOverview>
+                      </BigRating>
+                      <BigRating>{clickedTop.runtime}</BigRating>
+                      <BigRating>Rating: {clickedTop.vote_average}</BigRating>
                     </>
                   )}
                   {clickedUpcoming && (
@@ -442,10 +459,13 @@ function Home() {
                       />
                       <BigTitle>{clickedUpcoming.title}</BigTitle>
                       <BigOverview>{clickedUpcoming.overview}</BigOverview>
-                      <BigOverview>
+                      <BigRating>
                         Release Date: {clickedUpcoming.release_date}
-                      </BigOverview>
-                      <BigOverview>{clickedUpcoming.runtime}</BigOverview>
+                      </BigRating>
+                      <BigRating>{clickedUpcoming.runtime}</BigRating>
+                      <BigRating>
+                        Rating: {clickedUpcoming.vote_average}
+                      </BigRating>
                     </>
                   )}
                 </BigMovie>
