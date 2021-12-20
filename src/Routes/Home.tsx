@@ -3,7 +3,14 @@ import { useState } from "react";
 import { useQuery } from "react-query";
 import { useHistory, useRouteMatch } from "react-router-dom";
 import styled from "styled-components";
-import { getMovies, IGetMoviesResult } from "../api";
+import {
+  getLatestMovies,
+  getMovies,
+  getTopRated,
+  getUpcoming,
+  IGetMoviesResult,
+  IMovie,
+} from "../api";
 import { makeImagePath } from "../utils";
 
 const Wrapper = styled.div`
@@ -41,6 +48,7 @@ const Overview = styled.p`
 const Slider = styled.div`
   position: relative;
   top: -100px;
+  margin-bottom: 15rem;
 `;
 
 const Row = styled(motion.div)`
@@ -122,6 +130,10 @@ const BigOverview = styled.p`
   color: ${(props) => props.theme.white.lighter};
 `;
 
+const Category = styled.div`
+  font-size: 20px;
+  color: ${(props) => props.theme.white.lighter};
+`;
 const rowVariants = {
   hidden: {
     x: window.outerWidth + 5, // + 10은 내부의 gap을 수정해주기 위한 것.
@@ -170,7 +182,24 @@ function Home() {
     ["movies", "nowPlaying"],
     getMovies
   );
+
+  const { data: latest, isLoading: latestLoading } = useQuery<IMovie[]>(
+    ["movies", "latest"],
+    getLatestMovies
+  );
+
+  const { data: top, isLoading: topLoading } = useQuery<IGetMoviesResult>(
+    ["movies", "top"],
+    getTopRated
+  );
+
+  const { data: upcoming, isLoading: upcomingLoading } =
+    useQuery<IGetMoviesResult>(["movies", "upcoming"], getUpcoming);
+
   const [index, setIndex] = useState(0);
+  const [latestIndex, setLatestIndex] = useState(0);
+  const [topIndex, setTopIndex] = useState(0);
+  const [upcomingIndex, setUpcomingIndex] = useState(0);
   const [leaving, setLeaving] = useState(false); // Row간격 버그 수정
   const incraseIndex = () => {
     if (data) {
@@ -182,6 +211,16 @@ function Home() {
     }
   };
 
+  // const incraseLatestIndex = () => {
+  //   if (latest) {
+  //     if (leaving) return;
+  //     toggleLeaving();
+  //     const totalMovies = latest.results.length - 1;
+  //     const maxIndex = Math.floor(totalMovies / offset) - 1;
+  //     setIndex((prev) => (prev === maxIndex ? 0 : prev + 1));
+  //   }
+  // };
+
   const toggleLeaving = () => setLeaving((prev) => !prev);
   const onBoxClicked = (movieId: number) => {
     history.push(`/movies/${movieId}`);
@@ -191,9 +230,10 @@ function Home() {
     bigMovieMatch?.params.movieId &&
     data?.results.find((movie) => movie.id === +bigMovieMatch.params.movieId); // +: String to Number
 
+  // console.log(latest);
   return (
     <Wrapper>
-      {isLoading ? (
+      {isLoading && latestLoading && topLoading ? (
         <Loader>Loading...</Loader>
       ) : (
         <>
@@ -204,7 +244,9 @@ function Home() {
             <Title>{data?.results[0].title}</Title>
             <Overview>{data?.results[0].overview}</Overview>
           </Banner>
+
           <Slider>
+            <Category>Now Playing</Category>
             <AnimatePresence initial={false} onExitComplete={toggleLeaving}>
               <Row
                 variants={rowVariants}
@@ -236,6 +278,112 @@ function Home() {
               </Row>
             </AnimatePresence>
           </Slider>
+
+          {/* <Slider>
+            <Category>Latest</Category>
+            <AnimatePresence initial={false} onExitComplete={toggleLeaving}>
+              <Row
+                variants={rowVariants}
+                initial="hidden"
+                animate="visible"
+                exit="exit"
+                transition={{ type: "tween", duration: 1 }}
+                key={index}
+              >
+                {latest?
+                  .slice(1)
+                  .slice(offset * latestIndex, offset * latestIndex + offset) // pagination
+                  .map((movie) => (
+                    <Box
+                      layoutId={movie.id + ""}
+                      key={movie.id}
+                      whileHover="hover"
+                      initial="normal"
+                      variants={boxVariants}
+                      onClick={() => onBoxClicked(movie.id)}
+                      transition={{ type: "tween" }}
+                      bgPhoto={makeImagePath(movie.backdrop_path, "w500")}
+                    >
+                      <Info variants={infoVariants}>
+                        <h4>{movie.title}</h4>
+                      </Info>
+                    </Box>
+                  ))}
+              </Row>
+            </AnimatePresence>
+          </Slider> */}
+
+          <Slider>
+            <Category>Top Rated</Category>
+            <AnimatePresence initial={false} onExitComplete={toggleLeaving}>
+              <Row
+                variants={rowVariants}
+                initial="hidden"
+                animate="visible"
+                exit="exit"
+                transition={{ type: "tween", duration: 1 }}
+                key={index}
+              >
+                {top?.results
+                  .slice(1)
+                  .slice(offset * topIndex, offset * topIndex + offset) // pagination
+                  .map((movie) => (
+                    <Box
+                      layoutId={movie.id + ""}
+                      key={movie.id}
+                      whileHover="hover"
+                      initial="normal"
+                      variants={boxVariants}
+                      onClick={() => onBoxClicked(movie.id)}
+                      transition={{ type: "tween" }}
+                      bgPhoto={makeImagePath(movie.backdrop_path, "w500")}
+                    >
+                      <Info variants={infoVariants}>
+                        <h4>{movie.title}</h4>
+                      </Info>
+                    </Box>
+                  ))}
+              </Row>
+            </AnimatePresence>
+          </Slider>
+
+          <Slider>
+            <Category>Upcoming</Category>
+            <AnimatePresence initial={false} onExitComplete={toggleLeaving}>
+              <Row
+                variants={rowVariants}
+                initial="hidden"
+                animate="visible"
+                exit="exit"
+                transition={{ type: "tween", duration: 1 }}
+                key={index}
+              >
+                {upcoming?.results
+                  .slice(1)
+                  .slice(
+                    offset * upcomingIndex,
+                    offset * upcomingIndex + offset
+                  ) // pagination
+                  .map((movie) => (
+                    <Box
+                      layoutId={movie.id + ""}
+                      key={movie.id}
+                      whileHover="hover"
+                      initial="normal"
+                      variants={boxVariants}
+                      onClick={() => onBoxClicked(movie.id)}
+                      transition={{ type: "tween" }}
+                      bgPhoto={makeImagePath(movie.backdrop_path, "w500")}
+                    >
+                      <Info variants={infoVariants}>
+                        <h4>{movie.title}</h4>
+                      </Info>
+                    </Box>
+                  ))}
+              </Row>
+            </AnimatePresence>
+          </Slider>
+
           <AnimatePresence>
             {bigMovieMatch ? (
               <>
