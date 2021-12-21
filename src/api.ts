@@ -67,13 +67,13 @@ export function getUpcoming() {
 
 // Tv Shows
 export function getTvOntheAir() {
-  return fetch(`${BASE_PATH}/tv/on_the_air?api_key=${API_KEY}&page=3`).then(
+  return fetch(`${BASE_PATH}/tv/on_the_air?api_key=${API_KEY}&page=2`).then(
     (response) => response.json()
   );
 }
 
 export function getAiringToday() {
-  return fetch(`${BASE_PATH}/tv/airing_today?api_key=${API_KEY}&page=1`).then(
+  return fetch(`${BASE_PATH}/tv/airing_today?api_key=${API_KEY}&page=4`).then(
     (response) => response.json()
   );
 }
