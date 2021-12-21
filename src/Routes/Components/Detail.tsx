@@ -89,9 +89,7 @@ function Detail() {
                 : noImg,
             }}
           />
-          <BigTitle>
-            {data?.title} || {data?.name}
-          </BigTitle>
+          <BigTitle>{data?.title || data?.name}</BigTitle>
 
           <BigOverview>{data?.overview}</BigOverview>
           <DetailWrapper>
