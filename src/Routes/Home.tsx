@@ -140,18 +140,25 @@ const BigRating = styled.div`
   padding: 15px;
 `;
 
-const Category = styled.div`
-  font-size: 20px;
+const Category = styled.span`
+  background: linear-gradient(to top, #ffe400 20%, transparent 20%);
+  margin-bottom: 3px;
+  font-size: 23px;
   color: ${(props) => props.theme.white.lighter};
 `;
 
 const NextBtn = styled(motion.div)`
   position: absolute;
-  right: 11px;
-  top: 110px;
-  font-size: 20px;
+  right: 0px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 25px;
   color: ${(props) => props.theme.white.lighter};
   cursor: pointer;
+  width: 50px;
+  height: 200px;
+  background-color: rgba(0, 0, 0, 0.4);
 `;
 
 const rowVariants = {

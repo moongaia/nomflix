@@ -135,10 +135,27 @@ const BigOverview = styled.p`
   color: ${(props) => props.theme.white.lighter};
 `;
 
-const Category = styled.div`
-  font-size: 20px;
+const Category = styled.span`
+  background: linear-gradient(to top, #ffe400 20%, transparent 20%);
+  margin-bottom: 3px;
+  font-size: 23px;
   color: ${(props) => props.theme.white.lighter};
 `;
+
+const NextBtn = styled(motion.div)`
+  position: absolute;
+  right: -2px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 25px;
+  color: ${(props) => props.theme.white.lighter};
+  cursor: pointer;
+  width: 50px;
+  height: 200px;
+  background-color: rgba(0, 0, 0, 0.4);
+`;
+
 const rowVariants = {
   hidden: {
     x: window.outerWidth + 5, // + 10은 내부의 gap을 수정해주기 위한 것.
@@ -211,12 +228,42 @@ function Tv() {
   const [leaving, setLeaving] = useState(false); // Row간격 버그 수정
 
   const incraseIndex = () => {
+    if (onAir) {
+      if (leaving) return;
+      toggleLeaving();
+      const totalMovies = onAir.results.length - 1;
+      const maxIndex = Math.floor(totalMovies / offset) - 1;
+      setLatestIndex((prev) => (prev === maxIndex ? 0 : prev + 1));
+    }
+  };
+
+  const incraseTodayIndex = () => {
     if (data) {
       if (leaving) return;
       toggleLeaving();
       const totalMovies = data.results.length - 1;
       const maxIndex = Math.floor(totalMovies / offset) - 1;
       setIndex((prev) => (prev === maxIndex ? 0 : prev + 1));
+    }
+  };
+
+  const incraseTopIndex = () => {
+    if (top) {
+      if (leaving) return;
+      toggleLeaving();
+      const totalMovies = top.results.length - 1;
+      const maxIndex = Math.floor(totalMovies / offset) - 1;
+      setTopIndex((prev) => (prev === maxIndex ? 0 : prev + 1));
+    }
+  };
+
+  const incrasePopularIndex = () => {
+    if (popular) {
+      if (leaving) return;
+      toggleLeaving();
+      const totalMovies = popular.results.length - 1;
+      const maxIndex = Math.floor(totalMovies / offset) - 1;
+      setPopularIndex((prev) => (prev === maxIndex ? 0 : prev + 1));
     }
   };
 
@@ -252,7 +299,6 @@ function Tv() {
       ) : (
         <>
           <Banner
-            onClick={incraseIndex}
             bgPhoto={makeImagePath(onAir?.results[0].backdrop_path || "")}
           >
             <Title>{onAir?.results[0].name}</Title>
@@ -291,6 +337,9 @@ function Tv() {
                   ))}
               </Row>
             </AnimatePresence>
+            <NextBtn onClick={incraseIndex}>
+              <i className="fas fa-chevron-right"></i>
+            </NextBtn>
           </Slider>
 
           <Slider>
@@ -325,6 +374,9 @@ function Tv() {
                   ))}
               </Row>
             </AnimatePresence>
+            <NextBtn onClick={incraseTodayIndex}>
+              <i className="fas fa-chevron-right"></i>
+            </NextBtn>
           </Slider>
 
           <Slider>
@@ -359,6 +411,9 @@ function Tv() {
                   ))}
               </Row>
             </AnimatePresence>
+            <NextBtn onClick={incraseTopIndex}>
+              <i className="fas fa-chevron-right"></i>
+            </NextBtn>
           </Slider>
 
           <Slider>
@@ -393,6 +448,9 @@ function Tv() {
                   ))}
               </Row>
             </AnimatePresence>
+            <NextBtn onClick={incrasePopularIndex}>
+              <i className="fas fa-chevron-right"></i>
+            </NextBtn>
           </Slider>
 
           <AnimatePresence>

@@ -39,8 +39,9 @@ export interface IGetMoviesResult {
   total_results: number;
 }
 
+// Movies
 export function getMovies() {
-  return fetch(`${BASE_PATH}/movie/now_playing?api_key=${API_KEY}`).then(
+  return fetch(`${BASE_PATH}/movie/now_playing?api_key=${API_KEY}&page=2`).then(
     (response) => response.json()
   );
 }
@@ -52,35 +53,37 @@ export function getTopRated() {
 }
 
 export function getUpcoming() {
-  return fetch(`${BASE_PATH}/movie/upcoming?api_key=${API_KEY}`).then(
+  return fetch(`${BASE_PATH}/movie/upcoming?api_key=${API_KEY}&page=4`).then(
     (response) => response.json()
   );
 }
 
+// Tv Shows
 export function getTvOntheAir() {
-  return fetch(`${BASE_PATH}/tv/on_the_air?api_key=${API_KEY}`).then(
+  return fetch(`${BASE_PATH}/tv/on_the_air?api_key=${API_KEY}&page=3`).then(
     (response) => response.json()
   );
 }
 
 export function getAiringToday() {
-  return fetch(`${BASE_PATH}/tv/airing_today?api_key=${API_KEY}`).then(
+  return fetch(`${BASE_PATH}/tv/airing_today?api_key=${API_KEY}&page=1`).then(
     (response) => response.json()
   );
 }
 
 export function getPopular() {
-  return fetch(`${BASE_PATH}/tv/popular?api_key=${API_KEY}`).then((response) =>
-    response.json()
-  );
-}
-
-export function getTvTopRated() {
-  return fetch(`${BASE_PATH}/tv/top_rated?api_key=${API_KEY}`).then(
+  return fetch(`${BASE_PATH}/tv/popular?api_key=${API_KEY}&page=2`).then(
     (response) => response.json()
   );
 }
 
+export function getTvTopRated() {
+  return fetch(`${BASE_PATH}/tv/top_rated?api_key=${API_KEY}&page=3`).then(
+    (response) => response.json()
+  );
+}
+
+// Search
 export function searchMovies(query: string) {
   return fetch(
     `${BASE_PATH}/search/movie?api_key=${API_KEY}&query=${query}`
