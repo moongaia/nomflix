@@ -134,6 +134,21 @@ const Category = styled.div`
   font-size: 20px;
   color: ${(props) => props.theme.white.lighter};
 `;
+
+const NextBtn = styled(motion.div)`
+  position: absolute;
+  right: -2px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 25px;
+  color: ${(props) => props.theme.white.lighter};
+  cursor: pointer;
+  width: 50px;
+  height: 200px;
+  background-color: rgba(0, 0, 0, 0.4);
+`;
+
 const rowVariants = {
   hidden: {
     x: window.outerWidth + 5, // + 10은 내부의 gap을 수정해주기 위한 것.
@@ -208,6 +223,16 @@ function Search() {
     }
   };
 
+  const incraseTvIndex = () => {
+    if (tvShows) {
+      if (leaving) return;
+      toggleLeaving();
+      const totalMovies = tvShows.results.length - 1;
+      const maxIndex = Math.floor(totalMovies / offset) - 1;
+      setTvIndex((prev) => (prev === maxIndex ? 0 : prev + 1));
+    }
+  };
+
   const onBoxClicked = (movieId: number) => {
     history.push(`/movies/${movieId}`);
   };
@@ -232,7 +257,6 @@ function Search() {
       ) : (
         <>
           <Banner
-            onClick={incraseIndex}
             bgPhoto={makeImagePath(movies?.results[0].backdrop_path || "")}
           >
             <Title>{movies?.results[0].title}</Title>
@@ -271,6 +295,9 @@ function Search() {
                   ))}
               </Row>
             </AnimatePresence>
+            <NextBtn onClick={incraseIndex}>
+              <i className="fas fa-chevron-right"></i>
+            </NextBtn>
           </Slider>
 
           <Slider>
@@ -305,6 +332,9 @@ function Search() {
                   ))}
               </Row>
             </AnimatePresence>
+            <NextBtn onClick={incraseTvIndex}>
+              <i className="fas fa-chevron-right"></i>
+            </NextBtn>
           </Slider>
 
           <AnimatePresence>

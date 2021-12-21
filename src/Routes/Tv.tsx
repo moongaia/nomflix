@@ -114,28 +114,6 @@ const BigMovie = styled(motion.div)`
   background-color: ${(props) => props.theme.black.lighter};
 `;
 
-const BigCover = styled.div`
-  width: 100%;
-  background-size: cover;
-  background-position: center center;
-  height: 400px;
-`;
-
-const BigTitle = styled.h3`
-  color: ${(props) => props.theme.white.lighter};
-  padding: 20px;
-  font-size: 46px;
-  position: relative;
-  top: -80px;
-`;
-
-const BigOverview = styled.p`
-  padding: 20px;
-  position: relative;
-  top: -80px;
-  color: ${(props) => props.theme.white.lighter};
-`;
-
 const Category = styled.span`
   background: linear-gradient(to top, #ffe400 20%, transparent 20%);
   margin-bottom: 3px;
