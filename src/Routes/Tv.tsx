@@ -16,6 +16,7 @@ import {
   IMovie,
 } from "../api";
 import { makeImagePath } from "../utils";
+import Detail from "./Components/Detail";
 
 const Wrapper = styled.div`
   background: black;
@@ -273,21 +274,21 @@ function Tv() {
   };
   const onOverlayClick = () => history.push("/tv");
 
-  const clickedTv =
-    TvMatch?.params.tvId &&
-    data?.results.find((tv) => tv.id === +TvMatch.params.tvId); // +: String to Number
+  // const clickedTv =
+  //   TvMatch?.params.tvId &&
+  //   data?.results.find((tv) => tv.id === +TvMatch.params.tvId); // +: String to Number
 
-  const clickedLatest =
-    TvMatch?.params.tvId &&
-    onAir?.results.find((tv) => tv.id === +TvMatch.params.tvId);
+  // const clickedLatest =
+  //   TvMatch?.params.tvId &&
+  //   onAir?.results.find((tv) => tv.id === +TvMatch.params.tvId);
 
-  const clickedPopular =
-    TvMatch?.params.tvId &&
-    popular?.results.find((tv) => tv.id === +TvMatch.params.tvId);
+  // const clickedPopular =
+  //   TvMatch?.params.tvId &&
+  //   popular?.results.find((tv) => tv.id === +TvMatch.params.tvId);
 
-  const clickedTopRated =
-    TvMatch?.params.tvId &&
-    top?.results.find((tv) => tv.id === +TvMatch.params.tvId);
+  // const clickedTopRated =
+  //   TvMatch?.params.tvId &&
+  //   top?.results.find((tv) => tv.id === +TvMatch.params.tvId);
 
   // console.log(latest);
   // console.log(data?.results);
@@ -465,62 +466,7 @@ function Tv() {
                   style={{ top: scrollY.get() + 100 }}
                   layoutId={TvMatch.params.tvId}
                 >
-                  {clickedTv && (
-                    <>
-                      <BigCover
-                        style={{
-                          backgroundImage: `linear-gradient(to top, black, transparent), url(${makeImagePath(
-                            clickedTv.backdrop_path,
-                            "w500"
-                          )})`,
-                        }}
-                      />
-                      <BigTitle>{clickedTv.name}</BigTitle>
-                      <BigOverview>{clickedTv.overview}</BigOverview>
-                    </>
-                  )}
-                  {clickedLatest && (
-                    <>
-                      <BigCover
-                        style={{
-                          backgroundImage: `linear-gradient(to top, black, transparent), url(${makeImagePath(
-                            clickedLatest.backdrop_path,
-                            "w500"
-                          )})`,
-                        }}
-                      />
-                      <BigTitle>{clickedLatest.name}</BigTitle>
-                      <BigOverview>{clickedLatest.overview}</BigOverview>
-                    </>
-                  )}
-                  {clickedPopular && (
-                    <>
-                      <BigCover
-                        style={{
-                          backgroundImage: `linear-gradient(to top, black, transparent), url(${makeImagePath(
-                            clickedPopular.backdrop_path,
-                            "w500"
-                          )})`,
-                        }}
-                      />
-                      <BigTitle>{clickedPopular.name}</BigTitle>
-                      <BigOverview>{clickedPopular.overview}</BigOverview>
-                    </>
-                  )}
-                  {clickedTopRated && (
-                    <>
-                      <BigCover
-                        style={{
-                          backgroundImage: `linear-gradient(to top, black, transparent), url(${makeImagePath(
-                            clickedTopRated.backdrop_path,
-                            "w500"
-                          )})`,
-                        }}
-                      />
-                      <BigTitle>{clickedTopRated.name}</BigTitle>
-                      <BigOverview>{clickedTopRated.overview}</BigOverview>
-                    </>
-                  )}
+                  <Detail />
                 </BigMovie>
               </>
             ) : null}

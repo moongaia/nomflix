@@ -12,6 +12,7 @@ import {
 } from "../api";
 import { makeImagePath } from "../utils";
 import noImg from "../images/no_image.png";
+import Detail from "./Components/Detail";
 
 const Wrapper = styled.div`
   background: black;
@@ -107,37 +108,6 @@ const BigMovie = styled(motion.div)`
   border-radius: 15px;
   overflow: hidden;
   background-color: ${(props) => props.theme.black.lighter};
-`;
-
-const BigCover = styled.div`
-  width: 100%;
-  background-size: cover;
-  background-position: center center;
-  height: 400px;
-`;
-
-const BigTitle = styled.h3`
-  color: ${(props) => props.theme.white.lighter};
-  padding: 20px;
-  font-size: 46px;
-  position: relative;
-  top: -80px;
-`;
-
-const BigOverview = styled.p`
-  padding: 15px;
-  position: relative;
-  top: -90px;
-  font-size: 20px;
-  color: ${(props) => props.theme.white.lighter};
-`;
-
-const BigRating = styled.div`
-  font-size: 15px;
-  color: ${(props) => props.theme.white.lighter};
-  position: relative;
-  top: -90px;
-  padding: 15px;
 `;
 
 const Category = styled.span`
@@ -416,65 +386,7 @@ function Home() {
                   style={{ top: scrollY.get() + 100 }}
                   layoutId={bigMovieMatch.params.movieId}
                 >
-                  {clickedMovie && (
-                    <>
-                      <BigCover
-                        style={{
-                          backgroundImage: `linear-gradient(to top, black, transparent), url(${makeImagePath(
-                            clickedMovie.backdrop_path,
-                            "w500"
-                          )})`,
-                        }}
-                      />
-                      <BigTitle>{clickedMovie.title}</BigTitle>
-                      <BigOverview>{clickedMovie.overview}</BigOverview>
-                      <BigRating>
-                        Release Date: {clickedMovie.release_date}
-                      </BigRating>
-                      <BigRating>{clickedMovie.runtime}</BigRating>
-                      <BigRating>Rating: {clickedMovie.vote_average}</BigRating>
-                    </>
-                  )}
-                  {clickedTop && (
-                    <>
-                      <BigCover
-                        style={{
-                          backgroundImage: `linear-gradient(to top, black, transparent), url(${makeImagePath(
-                            clickedTop.backdrop_path,
-                            "w500"
-                          )})`,
-                        }}
-                      />
-                      <BigTitle>{clickedTop.title}</BigTitle>
-                      <BigOverview>{clickedTop.overview}</BigOverview>
-                      <BigRating>
-                        Release Date: {clickedTop.release_date}
-                      </BigRating>
-                      <BigRating>{clickedTop.runtime}</BigRating>
-                      <BigRating>Rating: {clickedTop.vote_average}</BigRating>
-                    </>
-                  )}
-                  {clickedUpcoming && (
-                    <>
-                      <BigCover
-                        style={{
-                          backgroundImage: `linear-gradient(to top, black, transparent), url(${makeImagePath(
-                            clickedUpcoming.backdrop_path,
-                            "w500"
-                          )})`,
-                        }}
-                      />
-                      <BigTitle>{clickedUpcoming.title}</BigTitle>
-                      <BigOverview>{clickedUpcoming.overview}</BigOverview>
-                      <BigRating>
-                        Release Date: {clickedUpcoming.release_date}
-                      </BigRating>
-                      <BigRating>{clickedUpcoming.runtime}</BigRating>
-                      <BigRating>
-                        Rating: {clickedUpcoming.vote_average}
-                      </BigRating>
-                    </>
-                  )}
+                  <Detail />
                 </BigMovie>
               </>
             ) : null}

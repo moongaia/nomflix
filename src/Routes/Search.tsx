@@ -10,6 +10,7 @@ import {
   searchTvShows,
 } from "../api";
 import { makeImagePath } from "../utils";
+import Detail from "./Components/Detail";
 
 const Wrapper = styled.div`
   background: black;
@@ -210,15 +211,19 @@ function Search() {
   const onBoxClicked = (movieId: number) => {
     history.push(`/movies/${movieId}`);
   };
+
+  const onTvBoxClicked = (tvId: number) => {
+    history.push(`/tv/${tvId}`);
+  };
   const onOverlayClick = () => history.push("/");
 
-  const clickedMovie =
-    bigMovieMatch?.params.movieId &&
-    movies?.results.find((movie) => movie.id === +bigMovieMatch.params.movieId); // +: String to Number
+  // const clickedMovie =
+  //   bigMovieMatch?.params.movieId &&
+  //   movies?.results.find((movie) => movie.id === +bigMovieMatch.params.movieId); // +: String to Number
 
-  const clickedTv =
-    bigTvMatch?.params.tvId &&
-    tvShows?.results.find((tv) => tv.id === +bigTvMatch.params.tvId);
+  // const clickedTv =
+  //   bigTvMatch?.params.tvId &&
+  //   tvShows?.results.find((tv) => tv.id === +bigTvMatch.params.tvId);
 
   return (
     <Wrapper>
@@ -289,7 +294,7 @@ function Search() {
                       whileHover="hover"
                       initial="normal"
                       variants={boxVariants}
-                      onClick={() => onBoxClicked(tv.id)}
+                      onClick={() => onTvBoxClicked(tv.id)}
                       transition={{ type: "tween" }}
                       bgPhoto={makeImagePath(tv.backdrop_path, "w500")}
                     >
@@ -314,34 +319,7 @@ function Search() {
                   style={{ top: scrollY.get() + 100 }}
                   layoutId={bigMovieMatch.params.movieId}
                 >
-                  {clickedMovie && (
-                    <>
-                      <BigCover
-                        style={{
-                          backgroundImage: `linear-gradient(to top, black, transparent), url(${makeImagePath(
-                            clickedMovie.backdrop_path,
-                            "w500"
-                          )})`,
-                        }}
-                      />
-                      <BigTitle>{clickedMovie.title}</BigTitle>
-                      <BigOverview>{clickedMovie.overview}</BigOverview>
-                    </>
-                  )}
-                  {/* {clickedTv && (
-                    <>
-                      <BigCover
-                        style={{
-                          backgroundImage: `linear-gradient(to top, black, transparent), url(${makeImagePath(
-                            clickedTv.backdrop_path,
-                            "w500"
-                          )})`,
-                        }}
-                      />
-                      <BigTitle>{clickedTv.name}</BigTitle>
-                      <BigOverview>{clickedTv.overview}</BigOverview>
-                    </>
-                  )} */}
+                  <Detail />
                 </BigMovie>
               </>
             ) : null}
@@ -356,20 +334,7 @@ function Search() {
                   style={{ top: scrollY.get() + 100 }}
                   layoutId={bigTvMatch.params.tvId}
                 >
-                  {clickedTv && (
-                    <>
-                      <BigCover
-                        style={{
-                          backgroundImage: `linear-gradient(to top, black, transparent), url(${makeImagePath(
-                            clickedTv.backdrop_path,
-                            "w500"
-                          )})`,
-                        }}
-                      />
-                      <BigTitle>{clickedTv.name}</BigTitle>
-                      <BigOverview>{clickedTv.overview}</BigOverview>
-                    </>
-                  )}
+                  <Detail />
                 </BigMovie>
               </>
             ) : null}

@@ -1,6 +1,11 @@
 const API_KEY = "1a21a3011e430600c006ad0e00b444da";
 const BASE_PATH = "https://api.themoviedb.org/3";
 
+interface IGenres {
+  id: number;
+  name: string;
+}
+
 export interface IMovie {
   id: number;
   backdrop_path: string;
@@ -11,6 +16,8 @@ export interface IMovie {
   release_date: string;
   runtime: number;
   vote_average: number;
+  genres: IGenres[];
+  name: string;
 }
 
 interface ITv {
@@ -93,5 +100,19 @@ export function searchMovies(query: string) {
 export function searchTvShows(query: string) {
   return fetch(`${BASE_PATH}/search/tv?api_key=${API_KEY}&query=${query}`).then(
     (response) => response.json()
+  );
+}
+
+// Detail
+
+export function getMovieDetail(movieId: string) {
+  return fetch(`${BASE_PATH}/movie/${movieId}?api_key=${API_KEY}`).then(
+    (response) => response.json()
+  );
+}
+
+export function getTvDetail(tvId: string) {
+  return fetch(`${BASE_PATH}/tv/${tvId}?api_key=${API_KEY}`).then((response) =>
+    response.json()
   );
 }
